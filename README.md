@@ -3,7 +3,7 @@ mirror-mirror
 
 Magic mirror in my hand, tell me if my website will look ugly in production **before** deploying to production.
 
-![img](https://raw.github.com/matteofigus/mirror-mirror/master/public/img/mirror-mirror.png)
+![img](https://raw.githubusercontent.com/matteofigus/mirror-mirror/master/img/mirror.gif)
 
 This is a wrapper around the wonderful [Nightmare.js](https://github.com/segmentio/nightmare) for:
 
