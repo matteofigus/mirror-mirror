@@ -58,10 +58,10 @@ runner.run(function(err, result){
   /*
   {
     home: {
-      after: '',
-      before: '',
-      isDifferent: true,
-      diff: ''
+      after: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-after.png',
+      before: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-before.png',
+      diff: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-diff.png',
+      isDifferent: true
     }
   }
   */

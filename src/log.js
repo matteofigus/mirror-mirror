@@ -12,7 +12,7 @@ module.exports = function(debug){
         ok: 'green'
       }[type] || 'green';
 
-      console.log(colors[colour](eventName + " » ") + message);
+      console.log(colors[colour](eventName + ' » ') + message);
     }
   };
 };

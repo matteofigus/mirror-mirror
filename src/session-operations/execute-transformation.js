@@ -16,7 +16,7 @@ module.exports = function(session, selector, transform){
     session = session.evaluate(function(args){
 
       if(args.isFunction){
-        args.t = new Function("var ____f=(" + args.t + ");return ____f.apply(____f, arguments);");
+        args.t = new Function('var ____f=(' + args.t + ');return ____f.apply(____f, arguments);'); // jshint ignore:line
       }
 
       var $el = document.querySelector(args.s),

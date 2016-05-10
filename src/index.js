@@ -93,7 +93,7 @@ module.exports = function(conf){
           log('Some sessions failed', 'error', 'Screenshots analysis...');
         } else if(failed > 0 && !succeeded){
           log('All sessions failed', 'error', 'Exiting...');
-          exit(1);
+          process.exit(1);
         } else {
           log('All sessions completed', 'ok', 'Screenshot analysis...');
         }
@@ -130,8 +130,9 @@ module.exports = function(conf){
             if(result.isDifferent){
               log('Diff for ' + session.options.urlDescription, 'error', 'Difference detected');
               different++;
-            } else
+            } else {
               log('Diff for ' + session.options.urlDescription, 'ok', 'No difference');
+            }
 
             session.result = result;
             next();

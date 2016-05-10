@@ -1,5 +1,6 @@
-var Mirror = require('../index');
+'use strict';
 
+var Mirror = require('../index');
 var mirror = new Mirror();
 
 mirror.setup({
