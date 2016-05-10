@@ -7,7 +7,7 @@ Magic mirror in my hand, tell me if my website will look ugly in production **be
 
 This is a wrapper around the wonderful [Nightmare.js](https://github.com/segmentio/nightmare) for:
 
-* Opening a matrix of urls
+* Opening a matrix of urls with Chrome
 * Specify a set of operations to perform
 * Take a screenshot
 * Make some changes (like swapping a CSS file, changing Js or HTML)
@@ -68,6 +68,10 @@ runner.run(function(err, result){
 });
 
 ```
+
+# API
+
+TODO
 
 # Contributing
 
