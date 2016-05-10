@@ -14,6 +14,12 @@ This is a wrapper around the wonderful [Nightmare.js](https://github.com/segment
 * Take another screenshot
 * Compare the screenshots and save a diff file with the highighted differences
 
+Some of the reasons why Nightmare.js is awesome: 
+* Crazy quick (able to perform the same action to ~30 prod urls in ~2 minutes)
+* Able to hide/show Chrome
+* Able to use DevTools and do debugging
+* Extensive API for doing any e2e testing
+
 # Requirements
 
 Node version: min: **0.10.35**, recommended: **>=4.2.X**
