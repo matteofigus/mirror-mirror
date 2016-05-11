@@ -1,12 +1,12 @@
 'use strict';
 
+var async = require('async');
 var colors = require('colors/safe');
 var Nightmare = require('nightmare');
 var path = require('path');
 var _ = require('lodash');
 
 var diff = require('./diff');
-var eachAsync = require('./utils').eachAsync;
 var executeCommands = require('./session-operations/execute-commands');
 var executeTransformation = require('./session-operations/execute-transformation');
 var Log = require('./log');
@@ -56,39 +56,59 @@ module.exports = function(conf){
 
       var succeeded = 0,
           failed = 0,
-          different = 0;
+          different = 0,
+          startSession;
 
-      eachAsync(sessions, function(session, next){
+      var q = async.queue(function(session, next){
+        startSession(session, next);
+      }, conf.concurrency || 3);
 
-        var startSession = function(cb){
-          log('starting session for url', 'ok', session.options.url);
-          var newSession = session.session();
+      startSession = function(session, cb){
+        log('starting session for url', 'ok', session.options.url);
 
-          newSession
-            .end()
-            .then(function(){
+        var newSession = session.session(),
+            cbDone = false;
+
+        var retry = function(){
+          if(session.attempts < 3){
+            session.attempts++;
+            log('attempt ' + session.attempts + ' for url', 'warn', session.options.url);
+            q.push(session);
+          } else {
+            failed++;
+            log('All Sessions failed for ', 'error', session.options.urlDescription);
+            session.failed = true;
+          }
+          cb();
+        }
+
+        setTimeout(function() {
+          if(!cbDone){
+            cbDone = true;
+            retry();
+          }
+        }, conf.timeout || 60000);
+
+        newSession
+          .end()
+          .then(function(){
+            if(!cbDone){
+              cbDone = true;
               log('Session completed', 'ok', session.options.url);
               succeeded++;
               return cb();
-            })
-            .catch(function(error){
+            }
+          })
+          .catch(function(error){
+            if(!cbDone){
+              cbDone = true;
               log('Session failed for ' + session.options.urlDescription, 'error', error);
+              retry();
+            }
+          });
+      };
 
-              if(session.attempts < 3){
-                session.attempts++;
-                log('attempt ' + session.attempts + ' for url', 'warn', session.options.url);
-                startSession(cb);
-              } else {
-                failed++;
-                log('All Sessions failed for ', 'error', session.options.urlDescription);
-                session.failed = true;
-                return cb();
-              }
-            });
-        };
-
-        startSession(next);
-      }, function(){
+      q.drain = function(){
         if(failed > 0 && succeeded > 0){
           log('Some sessions failed', 'error', 'Screenshots analysis...');
         } else if(failed > 0 && !succeeded){
@@ -98,7 +118,7 @@ module.exports = function(conf){
           log('All sessions completed', 'ok', 'Screenshot analysis...');
         }
 
-        eachAsync(sessions, function(session, next){
+        async.each(sessions, function(session, next){
           var basePath = path.resolve(session.options.screenshotsPath, session.options.urlDescription);
 
           if(session.failed){
@@ -141,7 +161,9 @@ module.exports = function(conf){
           var error = (!!failed || !!different) ? 'Some sessions failed or difference were detected' : null;
           callback(error, _.map(sessions, 'result'));
         });
-      });
+      };
+
+      q.push(sessions);
     }
   };
 };
