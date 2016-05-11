@@ -80,7 +80,7 @@ module.exports = function(conf){
             session.failed = true;
           }
           cb();
-        }
+        };
 
         setTimeout(function() {
           if(!cbDone){
