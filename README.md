@@ -95,7 +95,7 @@ Look at [Nighmare.js options](https://github.com/segmentio/nightmare#nightmareop
 This is an object with the following structure:
 
 |name|type|mandatory|description|
-|====|====|=========|===========|
+|----|----|---------|-----------|
 |after|`array of functions`|no|An array of nightmareJs actions to perform after the transformation and before the second screenshots. [Look at the example below](#nightmare-actions-example)|
 |before|`array of functions`|no|An array of nightmareJs actions to perform before the first screenshots. [Look at the example below](#nightmare-actions-example)|
 |cookies|`object`|no|Allows to specify cookies to be used for each request|
