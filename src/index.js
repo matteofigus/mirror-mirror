@@ -11,17 +11,34 @@ var executeCommands = require('./session-operations/execute-commands');
 var executeTransformation = require('./session-operations/execute-transformation');
 var Log = require('./log');
 var openUrl = require('./session-operations/open-url');
+var sanitiser = require('./sanitiser');
 var SaveScreenshot = require('./session-operations/save-screenshot');
+var validator = require('./validator');
 
 module.exports = function(conf){
 
-  var sessions, log;
+  var sessions,
+      log,
+      retries,
+      concurrency,
+      timeout;
 
   return {
     setup: function(options){
 
+      options = sanitiser.sanitiseOptions(options);
+      
+      var validationResult = validator.validateOptions(options);
+
+      if(!validationResult.isValid){
+        throw new Error(validationResult.error);
+      }
+
       sessions = [];
       log = new Log(options.debug);
+      retries = options.retries;
+      concurrency = options.concurrency;
+      timeout = options.timeout;
       
       var saveScreenshot = new SaveScreenshot(options.screenshotsPath);
 
@@ -51,6 +68,7 @@ module.exports = function(conf){
         });
       });
 
+      return sessions;
     },
     run: function(callback){
 
@@ -61,7 +79,7 @@ module.exports = function(conf){
 
       var q = async.queue(function(session, next){
         startSession(session, next);
-      }, conf.concurrency || 3);
+      }, concurrency);
 
       startSession = function(session, cb){
         log('starting session for url', 'ok', session.options.url);
@@ -70,7 +88,7 @@ module.exports = function(conf){
             cbDone = false;
 
         var retry = function(){
-          if(session.attempts < 3){
+          if(session.attempts < retries){
             session.attempts++;
             log('attempt ' + session.attempts + ' for url', 'warn', session.options.url);
             q.push(session);
@@ -87,7 +105,7 @@ module.exports = function(conf){
             cbDone = true;
             retry();
           }
-        }, conf.timeout || 60000);
+        }, timeout);
 
         newSession
           .end()
@@ -135,7 +153,7 @@ module.exports = function(conf){
             diff: basePath + '-diff.png'
           };
 
-          diff(result.before, result.after, result.diff, function(err, diffMetric){
+          diff(result.before, result.after, result.diff, function(err, isDifferent){
             if(err){
               failed++;
               session.result = {
@@ -145,9 +163,9 @@ module.exports = function(conf){
               return next();
             }
 
-            result.isDifferent = diffMetric === 1;
+            result.isDifferent = isDifferent;
 
-            if(result.isDifferent){
+            if(isDifferent){
               log('Diff for ' + session.options.urlDescription, 'error', 'Difference detected');
               different++;
             } else {
