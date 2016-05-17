@@ -4,7 +4,9 @@
   "description": "Test your UI changes in production before deploying to production",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jshint ./"
+    "jshint": "./node_modules/.bin/jshint ./",
+    "mocha": "./node_modules/.bin/mocha test/unit",
+    "test": "npm run jshint && npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
     "async": "^1.5.2",
     "colors": "^1.1.2",
     "fs-extra": "^0.30.0",
+    "joi": "^6.10.1",
     "lodash": "^4.11.2",
     "nightmare": "^2.4.0",
     "parse-domain": "^0.2.1",
@@ -31,7 +34,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "injectr": "^0.5.1",
     "jshint": "^2.9.2",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.4"
   }
 }

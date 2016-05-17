@@ -98,11 +98,14 @@ This is an object with the following structure:
 |----|----|---------|-----------|
 |after|`array of functions`|no|An array of nightmareJs actions to perform after the transformation and before the second screenshots. [Look at the example below](#nightmare-actions-example)|
 |before|`array of functions`|no|An array of nightmareJs actions to perform before the first screenshots. [Look at the example below](#nightmare-actions-example)|
+|concurrency|`number`|no|Default 3, is the concurrency of tests|
 |cookies|`object`|no|Allows to specify cookies to be used for each request|
 |debug|`boolean`|no|When true, shows stuff in the console|
 |headers|`object`|no|Allows to specify headers to be used for each request|
+|retries|`number`|no|Default 3, number of retries after a failing session|
 |screenshotsPath|`string`|yes|The path where to save the screenshots|
 |selector|`string`|yes|The css selector for the DOM tree you want to transform. It can be anything [`document.querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) can understand|
+|timeout|`number`|no|Default 20000, when the sessions is going to be restarted|
 |transform|`string` or `function`|true|The transformation to apply to the selector. If `string`, element will be replaced with the markup provided in the string. When `function`, it needs to transform a string to be replaced in the selected DOM tree. The function will have an [element](https://developer.mozilla.org/en-US/docs/Web/API/element) as parameter - the result of previous selection|
 |urls|`object`|yes|The urls to test. Key is used to generate screenshots file name so keep it simple and without spaces and stuff|
 
