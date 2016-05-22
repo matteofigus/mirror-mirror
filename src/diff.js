@@ -1,13 +1,23 @@
 'use strict';
 
-var colors = require('colors/safe');
-var fs = require('fs');
-var PNGDiff = require('png-diff');
+var BlinkDiff = require('blink-diff');
 var _ = require('lodash');
 
 module.exports = function(before, after, diffFile, callback){
-  var image2Stream = fs.createReadStream(after);
-  PNGDiff.outputDiff(before, image2Stream, diffFile, false , function(err, diffMetric){
-    callback(err, _.isUndefined(diffMetric) ? undefined : diffMetric === 1);
+
+  var diff = new BlinkDiff({
+    imageAPath: before,
+    imageBPath: after,
+    thresholdType: BlinkDiff.THRESHOLD_PERCENT,
+    threshold: 0.01,
+    hideShift: true,
+    imageOutputPath: diffFile
+  });
+
+  diff.run(function(err, result){
+    callback(err, _.isUndefined(result) ? undefined : {
+      isDifferent: result.differences > 0,
+      equality: 100 * (1 - (result.differences/result.dimension))
+    });
   });
 };

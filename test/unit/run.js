@@ -15,7 +15,10 @@ describe('run', function(){
   beforeEach(function(){
 
     nightmare = helper.getStubbedNightmare(null, 'ok');
-    diff = sinon.stub().yields(null, false);
+    diff = sinon.stub().yields(null, {
+      isDifferent: false,
+      equality: 100
+    });
 
     var Mirror = injectr('../../src/index.js', { 
       nightmare: nightmare,
@@ -76,7 +79,8 @@ describe('run', function(){
         after: './screenshots/home-after.png',
         before: './screenshots/home-before.png',
         diff: './screenshots/home-diff.png',
-        isDifferent: false
+        isDifferent: false,
+        equality: 100
       }]);
     });
   });
