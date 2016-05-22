@@ -136,7 +136,7 @@ module.exports = function(conf){
           log('All sessions completed', 'ok', 'Screenshot analysis...');
         }
 
-        async.each(sessions, function(session, next){
+        async.eachSeries(sessions, function(session, next){
           var basePath = path.resolve(session.options.screenshotsPath, session.options.urlDescription);
 
           if(session.failed){
@@ -153,7 +153,7 @@ module.exports = function(conf){
             diff: basePath + '-diff.png'
           };
 
-          diff(result.before, result.after, result.diff, function(err, isDifferent){
+          diff(result.before, result.after, result.diff, function(err, comparisonResult){
             if(err){
               failed++;
               session.result = {
@@ -163,9 +163,9 @@ module.exports = function(conf){
               return next();
             }
 
-            result.isDifferent = isDifferent;
+            result = _.extend(result, comparisonResult);
 
-            if(isDifferent){
+            if(result.isDifferent){
               log('Diff for ' + session.options.urlDescription, 'error', 'Difference detected');
               different++;
             } else {
