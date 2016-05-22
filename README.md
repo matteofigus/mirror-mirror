@@ -107,7 +107,7 @@ This is an object with the following structure:
 |screenshotsPath|`string`|yes|The path where to save the screenshots|
 |selector|`string`|yes|The css selector for the DOM tree you want to transform. It can be anything [`document.querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) can understand|
 |timeout|`number`|no|Default 20000, when the sessions is going to be restarted|
-|transform|`string` or `function`|true|The transformation to apply to the selector. If `string`, element will be replaced with the markup provided in the string. When `function`, it needs to transform a string to be replaced in the selected DOM tree. The function will have an [element](https://developer.mozilla.org/en-US/docs/Web/API/element) as parameter - the result of previous selection|
+|transform|`string` or `function`|yes|The transformation to apply to the selector. If `string`, element will be replaced with the markup provided in the string. When `function`, it needs to transform a string to be replaced in the selected DOM tree. The function will have an [element](https://developer.mozilla.org/en-US/docs/Web/API/element) as parameter - the result of previous selection|
 |urls|`object`|yes|The urls to test. Key is used to generate screenshots file name so keep it simple and without spaces and stuff|
 
 #### Nightmare actions example
