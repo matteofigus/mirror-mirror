@@ -12,7 +12,7 @@ This is a wrapper around the wonderful [Nightmare.js](https://github.com/segment
 * Take a screenshot
 * Make some changes (like swapping a CSS file, changing Js or HTML)
 * Take another screenshot
-* Compare the screenshots and save a diff file with the highighted differences
+* Compare the screenshots and save a diff file with the highlighted differences
 
 Most important features: 
 * Crazy quick compare to Selenium with Phantom
@@ -67,7 +67,8 @@ runner.run(function(err, result){
       after: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-after.png',
       before: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-before.png',
       diff: '/Users/mfigus/Documents/os/mirror-mirror/screenshots/home-diff.png',
-      isDifferent: true
+      isDifferent: true,
+      equality: 99.82844939446368
     }
   }
   */
