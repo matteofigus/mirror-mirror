@@ -13,6 +13,7 @@ var Log = require('./log');
 var openUrl = require('./session-operations/open-url');
 var sanitiser = require('./sanitiser');
 var SaveScreenshot = require('./session-operations/save-screenshot');
+var setViewport = require('./session-operations/set-viewport');
 var validator = require('./validator');
 
 module.exports = function(conf){
@@ -43,28 +44,38 @@ module.exports = function(conf){
       var saveScreenshot = new SaveScreenshot(options.screenshotsPath);
 
       _.each(options.urls, function(url, urlDescription){
+        _.each(options.viewports, function(viewport){
 
-        var initialiseSession = function(){
-          var session = Nightmare(conf || {});
+          var fileNamePrefix = urlDescription + '_' + viewport.join('x') + '_';
 
-          session.on('console', function(type, message){
-            log('browser console', 'warn', message);
+          var initialiseSession = function(){
+            var session = Nightmare(conf || {});
+
+            session.on('console', function(type, message){
+              log('browser console', 'warn', message);
+            });
+
+            session = setViewport(session, viewport);
+            session = openUrl(session, url, options.headers, options.cookies);
+            session = executeCommands(session, options.before);        
+            session = saveScreenshot(session, fileNamePrefix + 'before.png');
+            session = executeTransformation(session, options.selector, options.transform);
+            session = executeCommands(session, options.after);
+            session = saveScreenshot(session, fileNamePrefix + 'after.png');
+
+            return session;
+          };
+
+          sessions.push({
+            session: initialiseSession,
+            attempts: 0,
+            options: _.extend(_.clone(options), {
+              fileNamePrefix: fileNamePrefix,
+              url: url,
+              urlDescription: urlDescription,
+              viewport: viewport
+            })
           });
-
-          session = openUrl(session, url, options.headers, options.cookies);
-          session = executeCommands(session, options.before);        
-          session = saveScreenshot(session, urlDescription + '-before.png');
-          session = executeTransformation(session, options.selector, options.transform);
-          session = executeCommands(session, options.after);
-          session = saveScreenshot(session, urlDescription + '-after.png');
-
-          return session;
-        };
-
-        sessions.push({
-          options: _.extend(_.clone(options), { url: url, urlDescription: urlDescription }),
-          session: initialiseSession,
-          attempts: 0
         });
       });
 
@@ -77,12 +88,17 @@ module.exports = function(conf){
           different = 0,
           startSession;
 
+      var getSessionDescription = function(session){
+        return session.options.url + ' (' + session.options.viewport.join('x') + ')';
+      };
+
       var q = async.queue(function(session, next){
         startSession(session, next);
       }, concurrency);
 
       startSession = function(session, cb){
-        log('starting session for url', 'ok', session.options.url);
+        var description = getSessionDescription(session);
+        log('starting session for url', 'ok', description);
 
         var newSession = session.session(),
             cbDone = false;
@@ -112,7 +128,7 @@ module.exports = function(conf){
           .then(function(){
             if(!cbDone){
               cbDone = true;
-              log('Session completed', 'ok', session.options.url);
+              log('Session completed', 'ok', description);
               succeeded++;
               return cb();
             }
@@ -120,7 +136,7 @@ module.exports = function(conf){
           .catch(function(error){
             if(!cbDone){
               cbDone = true;
-              log('Session failed for ' + session.options.urlDescription, 'error', error);
+              log('Session failed for ' + description, 'error', error);
               retry();
             }
           });
@@ -137,7 +153,8 @@ module.exports = function(conf){
         }
 
         async.eachSeries(sessions, function(session, next){
-          var basePath = path.resolve(session.options.screenshotsPath, session.options.urlDescription);
+          var basePath = path.resolve(session.options.screenshotsPath, session.options.fileNamePrefix),
+              description = getSessionDescription(session);
 
           if(session.failed){
             session.result = {
@@ -148,9 +165,9 @@ module.exports = function(conf){
           }
 
           var result = {
-            after: basePath + '-after.png',
-            before: basePath + '-before.png',
-            diff: basePath + '-diff.png'
+            after: basePath + 'after.png',
+            before: basePath + 'before.png',
+            diff: basePath + 'diff.png'
           };
 
           diff(result.before, result.after, result.diff, function(err, comparisonResult){
@@ -166,10 +183,10 @@ module.exports = function(conf){
             result = _.extend(result, comparisonResult);
 
             if(result.isDifferent){
-              log('Diff for ' + session.options.urlDescription, 'error', 'Difference detected');
+              log('Diff for ' + description, 'error', 'Difference detected');
               different++;
             } else {
-              log('Diff for ' + session.options.urlDescription, 'ok', 'No difference');
+              log('Diff for ' + description, 'ok', 'No difference');
             }
 
             session.result = result;

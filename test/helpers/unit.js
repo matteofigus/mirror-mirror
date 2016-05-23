@@ -19,23 +19,25 @@ module.exports = {
   getStubbedNightmare: function(err, res){
     
     var nightmare = _.clone({
+      catch: sinon.stub(),
+      cookies: { set: sinon.stub() },
+      end: sinon.stub(),
       evaluate: sinon.stub(),
       goto: sinon.stub(),
-      cookies: { set: sinon.stub() },
       on: sinon.stub(),
       screenshot: sinon.stub(),
-      end: sinon.stub(),
       then: sinon.stub(),
-      catch: sinon.stub()
+      viewport: sinon.stub()
     });
 
+    nightmare.cookies.set.returns(nightmare);
+    nightmare.end.returns(nightmare);
     nightmare.evaluate.returns(nightmare);
     nightmare.goto.returns(nightmare);
-    nightmare.cookies.set.returns(nightmare);
     nightmare.on.returns(nightmare);
     nightmare.screenshot.returns(nightmare);
-    nightmare.end.returns(nightmare);
     nightmare.then.returns(nightmare).yields(res);
+    nightmare.viewport.returns(nightmare);
 
     stubs = nightmare;
 

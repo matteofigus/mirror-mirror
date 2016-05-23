@@ -31,6 +31,18 @@ describe('setup', function(){
     });
   });
 
+  describe('when called with not valid viewports', function(){
+
+    it('should throw an error', function(){
+      var opts = helper.getValidSetupOptions();
+      opts.viewports = [[0, -100]];
+
+      var execute = function(){ initialise(opts); };
+
+      expect(execute).to.throw('"0" must be larger than or equal to 1');
+    });
+  });
+
   describe('when called without selector', function(){
 
     it('should throw an error', function(){
