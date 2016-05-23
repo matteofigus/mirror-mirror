@@ -17,7 +17,8 @@ module.exports = {
       screenshotsPath: joi.string().required(),
       timeout: joi.number().required(),
       transform: joi.alternatives().try(joi.func(), joi.string()).required(),
-      urls: joi.object().required().min(1)
+      urls: joi.object().required().min(1),
+      viewports: joi.array().items(joi.array().items(joi.number().integer().min(1)))
     };
 
     var result = joi.validate(options, schema);

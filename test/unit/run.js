@@ -59,15 +59,19 @@ describe('run', function(){
       expect(stubs.goto.args[0][0]).to.eql('https://www.google.com');
     });
 
-    it('should call the nigthmare screenshot with the correct fileNames and paths', function(){
-      expect(stubs.screenshot.args[0][0]).to.equal('./screenshots/home-before.png');
-      expect(stubs.screenshot.args[1][0]).to.equal('./screenshots/home-after.png');
+    it('should call the nightmare viewport with the correct resolution', function(){
+      expect(stubs.viewport.args[0]).to.eql([800, 600]);
+    });
+
+    it('should call the nightmare screenshot with the correct fileNames and paths', function(){
+      expect(stubs.screenshot.args[0][0]).to.equal('./screenshots/home_800x600_before.png');
+      expect(stubs.screenshot.args[1][0]).to.equal('./screenshots/home_800x600_after.png');
     });
 
     it('should compare the screenshots and save the diff', function(){
-      expect(diff.args[0][0]).to.equal('./screenshots/home-before.png');
-      expect(diff.args[0][1]).to.equal('./screenshots/home-after.png');
-      expect(diff.args[0][2]).to.equal('./screenshots/home-diff.png');
+      expect(diff.args[0][0]).to.equal('./screenshots/home_800x600_before.png');
+      expect(diff.args[0][1]).to.equal('./screenshots/home_800x600_after.png');
+      expect(diff.args[0][2]).to.equal('./screenshots/home_800x600_diff.png');
     });
 
     it('should not error', function(){
@@ -76,9 +80,9 @@ describe('run', function(){
 
     it('should return a result', function(){
       expect(result).to.eql([{
-        after: './screenshots/home-after.png',
-        before: './screenshots/home-before.png',
-        diff: './screenshots/home-diff.png',
+        after: './screenshots/home_800x600_after.png',
+        before: './screenshots/home_800x600_before.png',
+        diff: './screenshots/home_800x600_diff.png',
         isDifferent: false,
         equality: 100
       }]);

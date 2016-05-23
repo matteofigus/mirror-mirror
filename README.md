@@ -7,7 +7,7 @@ Magic mirror in my hand, tell me if my website will look ugly in production **be
 
 This is a wrapper around the wonderful [Nightmare.js](https://github.com/segmentio/nightmare) for:
 
-* Opening a matrix of urls with Chrome
+* Opening a matrix of urls and viewports with Chrome
 * Specify a set of operations to perform
 * Take a screenshot
 * Make some changes (like swapping a CSS file, changing Js or HTML)
@@ -109,6 +109,7 @@ This is an object with the following structure:
 |timeout|`number`|no|Default 20000, when the sessions is going to be restarted|
 |transform|`string` or `function`|yes|The transformation to apply to the selector. If `string`, element will be replaced with the markup provided in the string. When `function`, it needs to transform a string to be replaced in the selected DOM tree. The function will have an [element](https://developer.mozilla.org/en-US/docs/Web/API/element) as parameter - the result of previous selection|
 |urls|`object`|yes|The urls to test. Key is used to generate screenshots file name so keep it simple and without spaces and stuff|
+|viewports|`array of arrays`|no|Default `[[800, 600]]`, is an array containing all the viewport resolutions for executing the tests|
 
 #### Nightmare actions example
 
