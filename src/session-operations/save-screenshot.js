@@ -1,10 +1,10 @@
 'use strict';
 
-var fs = require('fs-extra');
-var path = require('path');
+const fs = require('fs-extra');
+const path = require('path');
 
-module.exports = function(screenshotsPath){
-  return function(session, fileName){
+module.exports = (screenshotsPath) => {
+  return (session, fileName) => {
     fs.ensureDirSync(path.resolve(screenshotsPath));
     return session.screenshot(path.join(screenshotsPath, fileName));
   };

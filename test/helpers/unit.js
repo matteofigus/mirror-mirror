@@ -1,24 +1,24 @@
 'use strict';
 
-var sinon = require('sinon');
-var _ = require('lodash');
+const sinon = require('sinon');
+const _ = require('lodash');
 
-var stubs;
+let stubs;
 
 module.exports = {
-  getNightmareStubs: function(){
-    return stubs;
-  },
-  getPathStubs: function(){
-    var joinresolve = function(a, b){ return a + b; };
+  getNightmareStubs: () => stubs,
+  getPathStubs: () => {
+    
+    const joinresolve = (a, b) => a + b;
+
     return { 
       join: joinresolve,
       resolve: joinresolve
     };
   },
-  getStubbedNightmare: function(err, res){
+  getStubbedNightmare: (err, res) => {
     
-    var nightmare = _.clone({
+    const nightmare = _.clone({
       catch: sinon.stub(),
       cookies: { set: sinon.stub() },
       end: sinon.stub(),
@@ -41,20 +41,12 @@ module.exports = {
 
     stubs = nightmare;
 
-    return function(){
-      return nightmare;
-    };
+    return () => nightmare;
   },
-  getValidSetupOptions: function(){
-    return _.clone({
-      urls: {
-        home: 'https://www.google.com'
-      },
-      selector: 'head',
-      transform: function($el){
-        return $el.outerHTML;
-      },
-      screenshotsPath: './screenshots/'
-    });
-  }
+  getValidSetupOptions: () => _.clone({
+    urls: { home: 'https://www.google.com' },
+    selector: 'head',
+    transform: $el => $el.outerHTML,
+    screenshotsPath: './screenshots/'
+  })
 };
