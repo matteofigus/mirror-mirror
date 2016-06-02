@@ -1,59 +1,56 @@
 'use strict';
 
-var async = require('async');
-var colors = require('colors/safe');
-var Nightmare = require('nightmare');
-var path = require('path');
-var _ = require('lodash');
+const async = require('async');
+const Nightmare = require('nightmare');
+const path = require('path');
+const _ = require('lodash');
 
-var diff = require('./diff');
-var executeCommands = require('./session-operations/execute-commands');
-var executeTransformation = require('./session-operations/execute-transformation');
-var Log = require('./log');
-var openUrl = require('./session-operations/open-url');
-var sanitiser = require('./sanitiser');
-var SaveScreenshot = require('./session-operations/save-screenshot');
-var setViewport = require('./session-operations/set-viewport');
-var validator = require('./validator');
+const diff = require('./diff');
+const executeCommands = require('./session-operations/execute-commands');
+const executeTransformation = require('./session-operations/execute-transformation');
+const Log = require('./log');
+const openUrl = require('./session-operations/open-url');
+const sanitiser = require('./sanitiser');
+const SaveScreenshot = require('./session-operations/save-screenshot');
+const setViewport = require('./session-operations/set-viewport');
+const validator = require('./validator');
 
-module.exports = function(conf){
+module.exports = (conf) => {
 
-  var sessions,
+  let sessions,
       log,
       retries,
       concurrency,
       timeout;
 
   return {
-    setup: function(options){
+    setup: (options) => {
 
       options = sanitiser.sanitiseOptions(options);
       
-      var validationResult = validator.validateOptions(options);
+      const validationResult = validator.validateOptions(options);
 
       if(!validationResult.isValid){
         throw new Error(validationResult.error);
       }
 
       sessions = [];
-      log = new Log(options.debug);
+      log = Log(options.debug);
       retries = options.retries;
       concurrency = options.concurrency;
       timeout = options.timeout;
       
-      var saveScreenshot = new SaveScreenshot(options.screenshotsPath);
+      const saveScreenshot = SaveScreenshot(options.screenshotsPath);
 
-      _.each(options.urls, function(url, urlDescription){
-        _.each(options.viewports, function(viewport){
+      _.each(options.urls, (url, urlDescription) => {
+        _.each(options.viewports, (viewport) => {
 
-          var fileNamePrefix = urlDescription + '_' + viewport.join('x') + '_';
+          const fileNamePrefix = urlDescription + '_' + viewport.join('x') + '_';
 
-          var initialiseSession = function(){
-            var session = Nightmare(conf || {});
+          const initialiseSession = () => {
+            let session = Nightmare(conf || {});
 
-            session.on('console', function(type, message){
-              log('browser console', 'warn', message);
-            });
+            session.on('console', (type, message) => log('browser console', 'warn', message));
 
             session = setViewport(session, viewport);
             session = openUrl(session, url, options.headers, options.cookies);
@@ -70,10 +67,10 @@ module.exports = function(conf){
             session: initialiseSession,
             attempts: 0,
             options: _.extend(_.clone(options), {
-              fileNamePrefix: fileNamePrefix,
-              url: url,
-              urlDescription: urlDescription,
-              viewport: viewport
+              fileNamePrefix,
+              url,
+              urlDescription,
+              viewport
             })
           });
         });
@@ -81,29 +78,24 @@ module.exports = function(conf){
 
       return sessions;
     },
-    run: function(callback){
+    run: (callback) => {
 
-      var succeeded = 0,
+      let succeeded = 0,
           failed = 0,
           different = 0,
           startSession;
 
-      var getSessionDescription = function(session){
-        return session.options.url + ' (' + session.options.viewport.join('x') + ')';
-      };
+      const getSessionDescription = session => `${session.options.url} (${session.options.viewport.join('x')})`;
+      const q = async.queue((session, next) => startSession(session, next), concurrency);
 
-      var q = async.queue(function(session, next){
-        startSession(session, next);
-      }, concurrency);
-
-      startSession = function(session, cb){
-        var description = getSessionDescription(session);
+      startSession = (session, cb) => {
+        const description = getSessionDescription(session);
         log('starting session for url', 'ok', description);
 
-        var newSession = session.session(),
-            cbDone = false;
+        const newSession = session.session();
+        let cbDone = false;
 
-        var retry = function(){
+        const retry = () => {
           if(session.attempts < retries){
             session.attempts++;
             log('attempt ' + session.attempts + ' for url', 'warn', session.options.url);
@@ -116,7 +108,7 @@ module.exports = function(conf){
           cb();
         };
 
-        setTimeout(function() {
+        setTimeout(() => {
           if(!cbDone){
             cbDone = true;
             retry();
@@ -125,7 +117,7 @@ module.exports = function(conf){
 
         newSession
           .end()
-          .then(function(){
+          .then(() => {
             if(!cbDone){
               cbDone = true;
               log('Session completed', 'ok', description);
@@ -133,7 +125,7 @@ module.exports = function(conf){
               return cb();
             }
           })
-          .catch(function(error){
+          .catch((error) => {
             if(!cbDone){
               cbDone = true;
               log('Session failed for ' + description, 'error', error);
@@ -142,7 +134,7 @@ module.exports = function(conf){
           });
       };
 
-      q.drain = function(){
+      q.drain = () => {
         if(failed > 0 && succeeded > 0){
           log('Some sessions failed', 'error', 'Screenshots analysis...');
         } else if(failed > 0 && !succeeded){
@@ -152,9 +144,9 @@ module.exports = function(conf){
           log('All sessions completed', 'ok', 'Screenshot analysis...');
         }
 
-        async.eachSeries(sessions, function(session, next){
-          var basePath = path.resolve(session.options.screenshotsPath, session.options.fileNamePrefix),
-              description = getSessionDescription(session);
+        async.eachSeries(sessions, (session, next) => {
+          const basePath = path.resolve(session.options.screenshotsPath, session.options.fileNamePrefix),
+                description = getSessionDescription(session);
 
           if(session.failed){
             session.result = {
@@ -164,13 +156,13 @@ module.exports = function(conf){
             return next();
           }
 
-          var result = {
+          let result = {
             after: basePath + 'after.png',
             before: basePath + 'before.png',
             diff: basePath + 'diff.png'
           };
 
-          diff(result.before, result.after, result.diff, function(err, comparisonResult){
+          diff(result.before, result.after, result.diff, (err, comparisonResult) => {
             if(err){
               failed++;
               session.result = {
@@ -192,8 +184,8 @@ module.exports = function(conf){
             session.result = result;
             next();
           });
-        }, function(){
-          var error = (!!failed || !!different) ? 'Some sessions failed or difference were detected' : null;
+        }, () => {
+          const error = (!!failed || !!different) ? 'Some sessions failed or difference were detected' : null;
           callback(error, _.map(sessions, 'result'));
         });
       };

@@ -1,11 +1,11 @@
 'use strict';
 
-var joi = require('joi');
+const joi = require('joi');
 
 module.exports = {
-  validateOptions: function(options){
+  validateOptions: (options) => {
 
-    var schema = {
+    const schema = {
       after: joi.array().items(joi.func()),
       before: joi.array().items(joi.func()),
       concurrency: joi.number().required(),
@@ -21,7 +21,7 @@ module.exports = {
       viewports: joi.array().items(joi.array().items(joi.number().integer().min(1)))
     };
 
-    var result = joi.validate(options, schema);
+    const result = joi.validate(options, schema);
 
     return {
       isValid: !result.error,

@@ -1,12 +1,12 @@
 'use strict';
 
-var colors = require('colors/safe');
+const colors = require('colors/safe');
 
-module.exports = function(debug){
-  return function(eventName, type, message){
-    if(!!debug){
+module.exports = (debug) => {
+  return (eventName, type, message) => {
+    if(debug){
 
-      var colour = {
+      const colour = {
         error: 'red',
         warn: 'yellow',
         ok: 'green'

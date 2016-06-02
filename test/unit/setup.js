@@ -1,103 +1,101 @@
 'use strict';
 
-var expect = require('chai').expect;
-var injectr = require('injectr');
-var helper = require('../helpers/unit');
+const expect = require('chai').expect;
+const injectr = require('injectr');
+const helper = require('../helpers/unit');
 
-describe('setup', function(){
+describe('setup', () => {
 
-  var initialise;
-  beforeEach(function(){
-    var Mirror = injectr('../../src/index.js', {
+  let initialise;
+  beforeEach(() => {
+    const Mirror = injectr('../../src/index.js', {
       nightmare: helper.getStubbedNightmare()
     });
 
-    var mirror = new Mirror();
+    const mirror = Mirror();
 
-    initialise = function(options){
-      return mirror.setup(options);
-    };
+    initialise = options => mirror.setup(options);
   });
 
-  describe('when called with not valid urls', function(){
+  describe('when called with not valid urls', () => {
 
-    it('should throw an error', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should throw an error', () => {
+      let opts = helper.getValidSetupOptions();
       opts.urls = {};
 
-      var execute = function(){ initialise(opts); };
+      const execute = () => initialise(opts);
 
       expect(execute).to.throw('"urls" must have at least 1 children');
     });
   });
 
-  describe('when called with not valid viewports', function(){
+  describe('when called with not valid viewports', () => {
 
-    it('should throw an error', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should throw an error', () => {
+      let opts = helper.getValidSetupOptions();
       opts.viewports = [[0, -100]];
 
-      var execute = function(){ initialise(opts); };
+      const execute = () => initialise(opts);
 
       expect(execute).to.throw('"0" must be larger than or equal to 1');
     });
   });
 
-  describe('when called without selector', function(){
+  describe('when called without selector', () => {
 
-    it('should throw an error', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should throw an error', () => {
+      let opts = helper.getValidSetupOptions();
       opts.selector = null;
 
-      var execute = function(){ initialise(opts); };
+      const execute = () => initialise(opts);
 
       expect(execute).to.throw('"selector" must be a string');
     });
   });
 
-  describe('when called without transform function', function(){
+  describe('when called without transform function', () => {
 
-    it('should throw an error', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should throw an error', () => {
+      let opts = helper.getValidSetupOptions();
       delete opts.transform;
 
-      var execute = function(){ initialise(opts); };
+      const execute = () => initialise(opts);
 
       expect(execute).to.throw('"transform" is required');
     });
   });
 
-  describe('when transform is a function', function(){
+  describe('when transform is a function', () => {
 
-    it('should be valid', function(){
-      var opts = helper.getValidSetupOptions();
-      opts.transform = function(){ return 'hello'; };
+    it('should be valid', () => {
+      let opts = helper.getValidSetupOptions();
+      opts.transform = () => 'hello';
 
-      var sessions = initialise(opts);
+      const sessions = initialise(opts);
 
       expect(sessions.length).to.equal(1);
     });
   });
 
-  describe('when transform is a string', function(){
+  describe('when transform is a string', () => {
 
-    it('should be valid', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should be valid', () => {
+      let opts = helper.getValidSetupOptions();
       opts.transform = 'hello';
 
-      var sessions = initialise(opts);
+      const sessions = initialise(opts);
 
       expect(sessions.length).to.equal(1);
     });
   });
 
-  describe('when called without screenshotsPath', function(){
+  describe('when called without screenshotsPath', () => {
 
-    it('should throw an error', function(){
-      var opts = helper.getValidSetupOptions();
+    it('should throw an error', () => {
+      let opts = helper.getValidSetupOptions();
       opts.screenshotsPath = '';
 
-      var execute = function(){ initialise(opts); };
+      const execute = () => initialise(opts);
 
       expect(execute).to.throw('"screenshotsPath" is not allowed to be empty');
     });
