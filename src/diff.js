@@ -1,20 +1,20 @@
 'use strict';
 
-var BlinkDiff = require('blink-diff');
-var _ = require('lodash');
+const BlinkDiff = require('blink-diff');
+const _ = require('lodash');
 
-module.exports = function(before, after, diffFile, callback){
+module.exports = (imageAPath, imageBPath, imageOutputPath, callback) => {
 
-  var diff = new BlinkDiff({
-    imageAPath: before,
-    imageBPath: after,
+  const diff = new BlinkDiff({
+    imageAPath,
+    imageBPath,
     thresholdType: BlinkDiff.THRESHOLD_PERCENT,
     threshold: 0.01,
     hideShift: true,
-    imageOutputPath: diffFile
+    imageOutputPath
   });
 
-  diff.run(function(err, result){
+  diff.run((err, result) => {
     callback(err, _.isUndefined(result) ? undefined : {
       isDifferent: result.differences > 0,
       equality: 100 * (1 - (result.differences/result.dimension))

@@ -1,9 +1,9 @@
 'use strict';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = {
-  sanitiseOptions: function(options){
+  sanitiseOptions: (options) => {
     options.debug = options.debug || false;
     options.concurrency = options.concurrency || 3;
     options.retries = options.retries || 3;

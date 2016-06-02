@@ -4,9 +4,9 @@
   "description": "Test your UI changes in production before deploying to production",
   "main": "index.js",
   "scripts": {
-    "jshint": "./node_modules/.bin/jshint ./",
+    "lint": "./node_modules/.bin/eslint ./",
     "mocha": "./node_modules/.bin/mocha test/unit",
-    "test": "npm run jshint && npm run mocha"
+    "test": "npm run lint && npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -34,8 +34,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^2.11.1",
+    "eslint-config-defaults": "^9.0.0",
     "injectr": "^0.5.1",
-    "jshint": "^2.9.2",
     "mocha": "^2.4.5",
     "sinon": "^1.17.4"
   }

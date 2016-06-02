@@ -1,7 +1,7 @@
 'use strict';
 
-var Mirror = require('../index');
-var mirror = new Mirror();
+const Mirror = require('../index');
+const mirror = Mirror();
 
 mirror.setup({
 
@@ -27,6 +27,8 @@ mirror.setup({
   screenshotsPath: './screenshots'
 });
 
-mirror.run(function(err, result){
-  console.log(arguments);
+mirror.run((err, result) => {
+  console.log(err);
+  console.log(result);
+  process.exit(err ? 1 : 0);
 });

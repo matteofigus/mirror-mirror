@@ -22,7 +22,7 @@ Most important features:
 
 # Requirements
 
-Node version: min: **0.10.40**, recommended: **>=4.2.X**
+Node version: min: **>=4.2.X**
 
 Build status: Unix: [![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror)
 
@@ -37,7 +37,7 @@ $ npm install mirror-mirror
 ```js
 var mirror = require('mirror-mirror');
 
-var runner = new mirror();
+var runner = mirror();
 
 runner.setup({
   urls: {
@@ -45,7 +45,7 @@ runner.setup({
   },
 
   selector: '#nav-search',
-  transform: function(){
+  transform: () => {
     // Replace Amazon search with Google widget. Because it is funny.
     return '<form name="cse" id="searchbox_demo" action="https://www.google.com/cse">' +
             '<input type="hidden" name="cref" value="" />' +
@@ -59,7 +59,7 @@ runner.setup({
   screenshotsPath: './screenshots'
 });
 
-runner.run(function(err, result){
+runner.run((err, result) => {
   console.log(result);
   /*
   {
@@ -85,7 +85,7 @@ runner.run(function(err, result){
 
 ### Set up an instance
 
-`var mirror = new Mirror([NighmareOptions]);`
+`var mirror = Mirror([NighmareOptions]);`
 
 Look at [Nighmare.js options](https://github.com/segmentio/nightmare#nightmareoptions).
 
@@ -119,32 +119,20 @@ This example shows how to make a screenshot with a menu opened, assuming the tra
 mirror.setup({
   ...
   before: [
-    function(nightmare){
-      return nightmare.evaluate(function(){
-        // Assuming jQuery is in the page
-        $('#navbar-button').click();
-      });
-    }
+    // Assuming jQuery is in the page
+    nightmare => nightmare.evaluate(() => $('navbar-button').click())
   ],
   after: [
-    function(nightmare){
-      return nightmare.evaluate(function(){
+    (nightmare) => {
+      return nightmare.evaluate(() => {
         window.menusReady = false;
-        window.menus.initialise(function(){
+        window.menus.initialise(() => {
           window.menusReady = true;
         });
       });
     },
-    function(nightmare){
-      return nightmare.wait(function(){
-        return window.menusReady === true;
-      });
-    },
-    function(nightmare){
-      return nightmare.evaluate(function(){
-        $('#navbar-button').click();
-      });
-    }
+    nightmare => nightmare.wait(() => window.menusReady === true),
+    nightmare => nightmare.evaluate(() => $('navbar-button').click())
   ]
 });
 ```
