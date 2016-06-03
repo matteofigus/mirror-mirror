@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const helper = require('../helpers/unit');
+const helper = require('./helpers/unit');
 const injectr = require('injectr');
 const sinon = require('sinon');
 const _ = require('lodash');
@@ -20,11 +20,11 @@ describe('run', () => {
       equality: 100
     });
 
-    const Mirror = injectr('../../src/index.js', { 
+    const Mirror = injectr('../src/index.js', { 
       nightmare,
       path: helper.getPathStubs(),
       './diff': diff,
-      './session-operations/save-screenshot': injectr('../../src/session-operations/save-screenshot.js', {
+      './session-operations/save-screenshot': injectr('../src/session-operations/save-screenshot.js', {
         path: helper.getPathStubs(),
         'fs-extra': { ensureDirSync: _.noop }
       })

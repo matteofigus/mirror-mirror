@@ -2,13 +2,13 @@
 
 const expect = require('chai').expect;
 const injectr = require('injectr');
-const helper = require('../helpers/unit');
+const helper = require('./helpers/unit');
 
 describe('setup', () => {
 
   let initialise;
   beforeEach(() => {
-    const Mirror = injectr('../../src/index.js', {
+    const Mirror = injectr('../src/index.js', {
       nightmare: helper.getStubbedNightmare()
     });
 

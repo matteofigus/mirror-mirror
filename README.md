@@ -1,4 +1,4 @@
-mirror-mirror
+mirror-mirror [![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror)
 =============
 
 Magic mirror in my hand, tell me if my website will look ugly in production **before** deploying to production.
@@ -22,9 +22,10 @@ Most important features:
 
 # Requirements
 
-Node version: min: **>=4.2.X**
+* Node version: min: **>=4.2.X**
+* [How to use it on Headless CI Systems (Travis CI, Jenkins, etc.)](https://github.com/electron/electron/blob/master/docs/tutorial/testing-on-headless-ci.md)
 
-Build status: Unix: [![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror)
+Build status: Unix: 
 
 # Install it
 
