@@ -1,7 +1,4 @@
-mirror-mirror
-[![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror)
-[![node version](https://img.shields.io/node/v/mirror-mirror.svg)](https://npmjs.org/package/mirror-mirror)
-[![Dependency Status](https://david-dm.org/matteofigus/mirror-mirror.svg)](https://david-dm.org/matteofigus/mirror-mirror)
+mirror-mirror [![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror) [![npm version](https://img.shields.io/npm/v/mirror-mirror.svg)](https://npmjs.org/package/mirror-mirror) [![Dependency Status](https://david-dm.org/matteofigus/mirror-mirror.svg)](https://david-dm.org/matteofigus/mirror-mirror)
 =============
 
 Magic mirror in my hand, tell me if my website will look ugly in production **before** deploying to production.
