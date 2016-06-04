@@ -81,15 +81,15 @@ describe('e2e acceptance', () => {
         });
       });
 
-      it('should return an error', () => {
+      it('should not return an error', () => {
         expect(error).to.be.null;
       });
 
-      it('should detect difference', () => {
+      it('should detect images are not different', () => {
         expect(result[0].isDifferent).to.be.false;
       });
 
-      it('should show difference percentage', () => {
+      it('should show equality percentage 100%', () => {
         expect(result[0].equality).to.be.equal(100);
       });
 
