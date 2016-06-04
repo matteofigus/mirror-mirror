@@ -1,6 +1,6 @@
 {
   "name": "mirror-mirror",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test your UI changes in production before deploying to production",
   "main": "index.js",
   "scripts": {
