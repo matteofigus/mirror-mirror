@@ -27,7 +27,7 @@
     "blink-diff": "^1.0.12",
     "colors": "^1.1.2",
     "fs-extra": "^0.30.0",
-    "joi": "^9.0.0",
+    "joi": "^9.1.1",
     "lodash": "^4.11.2",
     "nightmare": "^2.4.0",
     "parse-domain": "^0.3.0"
