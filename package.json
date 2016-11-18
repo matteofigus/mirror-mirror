@@ -29,7 +29,7 @@
     "fs-extra": "^1.0.0",
     "joi": "^10.0.0",
     "lodash": "^4.11.2",
-    "nightmare": "^2.4.0",
+    "nightmare": "^2.8.0",
     "parse-domain": "^1.0.0"
   },
   "devDependencies": {
