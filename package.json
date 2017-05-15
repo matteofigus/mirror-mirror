@@ -38,6 +38,6 @@
     "eslint-config-defaults": "^9.0.0",
     "injectr": "^0.5.1",
     "mocha": "^3.0.0",
-    "sinon": "^1.17.4"
+    "sinon": "^2.2.0"
   }
 }
