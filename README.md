@@ -1,6 +1,8 @@
 mirror-mirror [![Build Status](https://secure.travis-ci.org/matteofigus/mirror-mirror.png?branch=master)](http://travis-ci.org/matteofigus/mirror-mirror) [![npm version](https://img.shields.io/npm/v/mirror-mirror.svg)](https://npmjs.org/package/mirror-mirror) [![Dependency Status](https://david-dm.org/matteofigus/mirror-mirror.svg)](https://david-dm.org/matteofigus/mirror-mirror)
 =============
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/matteofigus/mirror-mirror.svg)](https://greenkeeper.io/)
+
 Magic mirror in my hand, tell me if my website will look ugly in production **before** deploying to production.
 
 ![img](https://raw.githubusercontent.com/matteofigus/mirror-mirror/master/img/mirror.gif)
