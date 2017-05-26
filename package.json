@@ -33,7 +33,7 @@
     "parse-domain": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "eslint": "^3.18.0",
     "eslint-config-defaults": "^9.0.0",
     "injectr": "^0.5.1",
