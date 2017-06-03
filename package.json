@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./",
     "mocha": "./node_modules/.bin/mocha --timeout 20000",
-    "test": "npm run lint && npm run mocha"
+    "test": "npm run lint && npm run mocha",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -30,7 +32,8 @@
     "joi": "^10.4.0",
     "lodash": "^4.11.2",
     "nightmare": "^2.10.0",
-    "parse-domain": "^1.0.0"
+    "parse-domain": "^1.0.0",
+    "snyk": "^1.33.0"
   },
   "devDependencies": {
     "chai": "^4.0.0",
@@ -39,5 +42,6 @@
     "injectr": "^0.5.1",
     "mocha": "^3.3.0",
     "sinon": "^2.2.0"
-  }
+  },
+  "snyk": true
 }
